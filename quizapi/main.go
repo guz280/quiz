@@ -8,22 +8,29 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	// "github.com/gorilla/mux"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	//fmt.Println("Endpoint Hit: homePage")
+	fmt.Fprintf(w, "Welcome")
 }
 
 func handleRequests() {
+	// myRouter := mux.NewRouter().StrictSlash(true)
+	// myRouter.HandleFunc("/", homePage)
+	// myRouter.HandleFunc("/questions", returnQuestionIds)
+	// myRouter.HandleFunc("/results", results).Methods("POST")
+	// myRouter.HandleFunc("/question/{id}", returnQuestionAndAnswers)
+	// log.Fatal(http.ListenAndServe(":1000", myRouter))
 	http.HandleFunc("/", homePage)
 	// return list of question ids
 	http.HandleFunc("/questions", returnQuestionIds)
 	http.HandleFunc("/question", returnQuestionAndAnswers)
+	http.HandleFunc("/results", results)
 	log.Fatal(http.ListenAndServe(":1000", nil))
 }
 
-// start - GET Question Ids
+// START - GET Question Ids
 type QuestionId struct {
 	Id int
 }
@@ -33,7 +40,7 @@ var QuestionIds []QuestionId
 
 // questions ids
 func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnQuestionIds")
+	fmt.Println("ENDpoint Hit: returnQuestionIds")
 	QuestionIds = []QuestionId{
 		QuestionId{Id: 1},
 		QuestionId{Id: 2},
@@ -46,9 +53,9 @@ func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(QuestionIds)
 }
 
-// end - GET Question Ids
+// END - GET Question Ids
 
-// start - GET Question & Answer By Id
+// START - GET Question & Answer By Id
 type QandAs struct {
 	QandAs []QandA `json:"QandA"`
 }
@@ -59,7 +66,7 @@ type QandA struct {
 }
 
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnQuestionAndAnswers")
+	fmt.Println("ENDpoint Hit: returnQuestionAndAnswers")
 
 	var id = r.URL.Query().Get("id")
 	questionId, err := strconv.Atoi(id)
@@ -81,19 +88,73 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		defer jsonFile.Close()
 		// read our opened jsonFile as a byte array.
 		byteValue, _ := ioutil.ReadAll(jsonFile)
-		// initialis QandA array
+		// initialise QandA array
 		var qandas QandAs
 		json.Unmarshal(byteValue, &qandas)
 		fmt.Println(qandas.QandAs[questionId-1])
-		// jq := gojsonq.New().File("./QuestionAndAnswers.json")
-		// res := jq.From("QandA").Where("id", "==", id).Get()
-		// fmt.Println(res)
-
-		//json.NewEncoder(w).Encode(QuestionIds)
 	}
 }
 
-// end - GET Question & Answer By Id
+// END - GET Question & Answer By Id
+
+// START - POST Question Number & Answer Id
+type Answers struct {
+	Answers []Answer `json:"Answers"`
+}
+type Answer struct {
+	Id     int `json:"id"`
+	Answer int `json:"answer"`
+}
+
+func results(w http.ResponseWriter, r *http.Request) {
+	//fmt.Println(r.Method)
+	// get the body of our POST request
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	//fmt.Println(string(reqBody))
+
+	var ints []int
+	err := json.Unmarshal([]byte(reqBody), &ints)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var goodAnswers, badAnswers int = 0, 0
+	// loop through array to submit good/bad answers
+
+	// load answers from json
+	// Open our jsonFile
+	jsonFile, err := os.Open("Answers.json")
+	// handle error
+	if err != nil {
+		fmt.Println(err)
+	}
+	// defer the closing of our jsonFile so that we can parse it later on
+	defer jsonFile.Close()
+	// read our opened jsonFile as a byte array.
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	// initialise QandA array
+	var answers Answers
+	json.Unmarshal(byteValue, &answers)
+
+	for index, answer := range ints {
+		// check if answer is good or not, increment count accordingly
+		if answers.Answers[index].Answer == answer {
+			goodAnswers += 1
+		} else {
+			badAnswers += 1
+		}
+	}
+	fmt.Println("goodAnswers:", goodAnswers)
+	fmt.Println("badAnswers:", badAnswers)
+
+	// submit score to global variable
+
+	// issue percentage
+	// You scored higher than 60% of all quizzers;
+
+}
+
+// END - POST Question Number & Answer Id
 
 func main() {
 	handleRequests()
