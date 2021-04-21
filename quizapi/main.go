@@ -98,6 +98,9 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 // END - GET Question & Answer By Id
 
 // START - POST Question Number & Answer Id
+
+var GoodAnswerScores []int
+
 type Answers struct {
 	Answers []Answer `json:"Answers"`
 }
@@ -106,52 +109,58 @@ type Answer struct {
 	Answer int `json:"answer"`
 }
 
+// I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
 func results(w http.ResponseWriter, r *http.Request) {
-	//fmt.Println(r.Method)
-	// get the body of our POST request
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	//fmt.Println(string(reqBody))
+	if r.Method != "POST" {
+		fmt.Println("Has to be a POST Method")
+	} else {
+		//fmt.Println(r.Method)
+		// get the body of our POST request
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		//fmt.Println(string(reqBody))
 
-	var ints []int
-	err := json.Unmarshal([]byte(reqBody), &ints)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var goodAnswers, badAnswers int = 0, 0
-	// loop through array to submit good/bad answers
-
-	// load answers from json
-	// Open our jsonFile
-	jsonFile, err := os.Open("Answers.json")
-	// handle error
-	if err != nil {
-		fmt.Println(err)
-	}
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer jsonFile.Close()
-	// read our opened jsonFile as a byte array.
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	// initialise QandA array
-	var answers Answers
-	json.Unmarshal(byteValue, &answers)
-
-	for index, answer := range ints {
-		// check if answer is good or not, increment count accordingly
-		if answers.Answers[index].Answer == answer {
-			goodAnswers += 1
-		} else {
-			badAnswers += 1
+		var ints []int
+		err := json.Unmarshal([]byte(reqBody), &ints)
+		if err != nil {
+			log.Fatal(err)
 		}
+
+		var goodAnswers, badAnswers int = 0, 0
+		// loop through array to submit good/bad answers
+
+		// load answers from json
+		// Open our jsonFile
+		jsonFile, err := os.Open("Answers.json")
+		// handle error
+		if err != nil {
+			fmt.Println(err)
+		}
+		// defer the closing of our jsonFile so that we can parse it later on
+		defer jsonFile.Close()
+		// read our opened jsonFile as a byte array.
+		byteValue, _ := ioutil.ReadAll(jsonFile)
+		// initialise QandA array
+		var answers Answers
+		json.Unmarshal(byteValue, &answers)
+
+		for index, answer := range ints {
+			// check if answer is good or not, increment count accordingly
+			if answers.Answers[index].Answer == answer {
+				goodAnswers += 1
+			} else {
+				badAnswers += 1
+			}
+		}
+		fmt.Println("goodAnswers:", goodAnswers)
+		fmt.Println("badAnswers:", badAnswers)
+		GoodAnswerScores = append(GoodAnswerScores, goodAnswers)
+		fmt.Println("GoodAnswerScores:", GoodAnswerScores)
+		fmt.Println("Length:", len(GoodAnswerScores))
+		// submit score to global variable
+
+		// issue percentage
+		// You scored higher than 60% of all quizzers;
 	}
-	fmt.Println("goodAnswers:", goodAnswers)
-	fmt.Println("badAnswers:", badAnswers)
-
-	// submit score to global variable
-
-	// issue percentage
-	// You scored higher than 60% of all quizzers;
-
 }
 
 // END - POST Question Number & Answer Id
