@@ -1,4 +1,4 @@
-module quizapi
+module quizcmd
 
 go 1.16
 
