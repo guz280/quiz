@@ -126,15 +126,11 @@ func results(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println(r.Method)
 		// get the body of our POST request
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		//fmt.Println(string(reqBody))
 
 		// read json file sent by user
 		// initialise answers array
 		var userAnswers Answers
 		json.Unmarshal(reqBody, &userAnswers)
-		//fmt.Println(userAnswers.Answers[0].AnswerId)
-		//fmt.Println(userAnswers.Answers[0].QuestionId)
-		//fmt.Println(len([]Answer(userAnswers.Answers)))
 		var goodAnswersCount, badAnswersCount int = 0, 0
 		// loop through array to submit good/bad answers
 
