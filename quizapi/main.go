@@ -16,12 +16,15 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequests() {
-	// myRouter := mux.NewRouter().StrictSlash(true)
-	// myRouter.HandleFunc("/", homePage)
-	// myRouter.HandleFunc("/questions", returnQuestionIds)
-	// myRouter.HandleFunc("/results", results).Methods("POST")
-	// myRouter.HandleFunc("/question/{id}", returnQuestionAndAnswers)
-	// log.Fatal(http.ListenAndServe(":1000", myRouter))
+	// using "github.com/gorilla/mux" -> but had issues with this library
+	// // myRouter := mux.NewRouter().StrictSlash(true)
+	// // myRouter.HandleFunc("/", homePage)
+	// // myRouter.HandleFunc("/questions", returnQuestionIds)
+	// // myRouter.HandleFunc("/results", results).Methods("POST")
+	// // myRouter.HandleFunc("/question/{id}", returnQuestionAndAnswers)
+	// // log.Fatal(http.ListenAndServe(":1000", myRouter))
+
+	// using "net/http"
 	http.HandleFunc("/", homePage)
 	// return list of question ids
 	http.HandleFunc("/questions", returnQuestionIds)
@@ -30,6 +33,10 @@ func handleRequests() {
 	log.Fatal(http.ListenAndServe(":1000", nil))
 }
 
+//
+//
+//
+//
 // START - GET Question Ids
 type QuestionId struct {
 	Id int
@@ -54,19 +61,22 @@ func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
 }
 
 // END - GET Question Ids
-
+//
+//
+//
+//
 // START - GET Question & Answer By Id
 type QandAs struct {
 	QandAs []QandA `json:"QandA"`
 }
 type QandA struct {
-	//Id       int    `json:"id"`
+	Id       int    `json:"id"`
 	Question string `json:"question"`
 	Answers  string `json:"answers"`
+	Answer   int    `json:"answer"`
 }
 
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ENDpoint Hit: returnQuestionAndAnswers")
 
 	var id = r.URL.Query().Get("id")
 	questionId, err := strconv.Atoi(id)
@@ -91,23 +101,28 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		// initialise QandA array
 		var qandas QandAs
 		json.Unmarshal(byteValue, &qandas)
-		fmt.Println(qandas.QandAs[questionId-1])
+		fmt.Println("Question: ", qandas.QandAs[questionId-1].Question)
+		fmt.Println("Answers:", qandas.QandAs[questionId-1].Answers)
+		json.NewEncoder(w).Encode("Questions: " + qandas.QandAs[questionId-1].Question + " Answers: " + qandas.QandAs[questionId-1].Answers)
 	}
 }
 
 // END - GET Question & Answer By Id
-
+//
+//
+//
+//
 // START - POST Question Number & Answer Id
 
 var GoodAnswerScores []int
 
-type Answers struct {
-	Answers []Answer `json:"Answers"`
-}
-type Answer struct {
-	Id     int `json:"id"`
-	Answer int `json:"answer"`
-}
+// type Answers struct {
+// 	Answers []Answer `json:"Answers"`
+// }
+// type Answer struct {
+// 	Id     int `json:"id"`
+// 	Answer int `json:"answer"`
+// }
 
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
 func results(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +145,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 
 		// load answers from json
 		// Open our jsonFile
-		jsonFile, err := os.Open("Answers.json")
+		jsonFile, err := os.Open("QuestionsAndAnswers.json")
 		// handle error
 		if err != nil {
 			fmt.Println(err)
@@ -140,12 +155,13 @@ func results(w http.ResponseWriter, r *http.Request) {
 		// read our opened jsonFile as a byte array.
 		byteValue, _ := ioutil.ReadAll(jsonFile)
 		// initialise QandA array
-		var answers Answers
+		var answers QandAs
 		json.Unmarshal(byteValue, &answers)
+		//fmt.Println("guz:", answers)
 
 		for index, answer := range ints {
 			// check if answer is good or not, increment count accordingly
-			if answers.Answers[index].Answer == answer {
+			if answers.QandAs[index].Answer == answer {
 				goodAnswersCount += 1
 			} else {
 				badAnswersCount += 1
@@ -156,9 +172,6 @@ func results(w http.ResponseWriter, r *http.Request) {
 
 		// append to array to keep track of +ve scores
 		GoodAnswerScores = append(GoodAnswerScores, goodAnswersCount)
-		//fmt.Println("GoodAnswerScores:", GoodAnswerScores)
-		//fmt.Println("Length:", len(GoodAnswerScores))
-		// submit score to global variable
 
 		// calculate +ve percentage
 		var count int = 0
@@ -168,13 +181,16 @@ func results(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		var stat int = (count * 100) / len(GoodAnswerScores)
-		fmt.Printf("You scored higher than %v of all quizzers", stat)
+		fmt.Printf("You scored higher than %v%% of all quizzers", stat)
 		fmt.Println()
 	}
 }
 
 // END - POST Question Number & Answer Id
-
+//
+//
+//
+//
 func main() {
 	handleRequests()
 }

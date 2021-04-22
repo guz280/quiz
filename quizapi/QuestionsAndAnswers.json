@@ -3,37 +3,44 @@
        {
           "Id":1,
           "Question":"What's the biggest animal in the world?",
-          "Answers":"1.(The blue whale) 2.(Elephant) 3.(Rhino) 4.(Gorilla)"
+          "Answers":"1.(The blue whale) 2.(Elephant) 3.(Rhino) 4.(Gorilla)",
+          "Answer": 1
        },
        {
           "Id":2,
           "Question":"Who painted the Mona Lisa?",
-          "Answers":"1.(Leonardo da Vinci) 2.(Vincent van Gogh) 3.(Pablo Picasso) 4.(Rambrandt)"
+          "Answers":"1.(Leonardo da Vinci) 2.(Vincent van Gogh) 3.(Pablo Picasso) 4.(Rambrandt)",
+          "Answer": 1
        },
        {
           "Id":3,
           "Question":"What is the largest country in the world?",
-          "Answers":"1.(Russia) 2.(United Sates) 3.(Malta) 4.(Brazil)"
+          "Answers":"1.(Russia) 2.(United Sates) 3.(Malta) 4.(Brazil)",
+          "Answer": 1
        },
        {
           "Id":4,
           "Question":"Who is the highest spiritual leader of Tibet?",
-          "Answers":"1.(The Dalai Lama) 2.(Pope Francis) 3.(Boris Johnson) 4.(Elon Musk)"
+          "Answers":"1.(The Dalai Lama) 2.(Pope Francis) 3.(Boris Johnson) 4.(Elon Musk)",
+          "Answer": 1
        },
        {
           "Id":5,
           "Question":"How many elements are there in the periodic table?",
-          "Answers":"1.(118) 2.(7) 3.(100) 4.(2000)"
+          "Answers":"1.(118) 2.(7) 3.(100) 4.(2000)",
+          "Answer": 1
        },
        {
           "Id":6,
           "Question":"Which is the largest rain forest in the world?",
-          "Answers":"1.(Amazon) 2.(Ebay) 3.(Buskett) 4.(Monteverde Cloud Forest)"
+          "Answers":"1.(Amazon) 2.(Ebay) 3.(Buskett) 4.(Monteverde Cloud Forest)",
+          "Answer": 1
        },
        {
           "Id":7,
           "Question":"How old is Pope Francis?",
-          "Answers":"1.(84) 2.(22) 3.(40) 4.(99)"
+          "Answers":"1.(84) 2.(22) 3.(40) 4.(99)",
+          "Answer": 1
        }
     ]
  }
