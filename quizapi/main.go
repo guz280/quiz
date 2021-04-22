@@ -116,14 +116,6 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 
 var GoodAnswerScores []int
 
-// type Answers struct {
-// 	Answers []Answer `json:"Answers"`
-// }
-// type Answer struct {
-// 	Id     int `json:"id"`
-// 	Answer int `json:"answer"`
-// }
-
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
 func results(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
