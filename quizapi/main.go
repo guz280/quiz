@@ -125,7 +125,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		var goodAnswers, badAnswers int = 0, 0
+		var goodAnswersCount, badAnswersCount int = 0, 0
 		// loop through array to submit good/bad answers
 
 		// load answers from json
@@ -146,20 +146,30 @@ func results(w http.ResponseWriter, r *http.Request) {
 		for index, answer := range ints {
 			// check if answer is good or not, increment count accordingly
 			if answers.Answers[index].Answer == answer {
-				goodAnswers += 1
+				goodAnswersCount += 1
 			} else {
-				badAnswers += 1
+				badAnswersCount += 1
 			}
 		}
-		fmt.Println("goodAnswers:", goodAnswers)
-		fmt.Println("badAnswers:", badAnswers)
-		GoodAnswerScores = append(GoodAnswerScores, goodAnswers)
-		fmt.Println("GoodAnswerScores:", GoodAnswerScores)
-		fmt.Println("Length:", len(GoodAnswerScores))
+		fmt.Println("goodAnswers:", goodAnswersCount)
+		fmt.Println("badAnswers:", badAnswersCount)
+
+		// append to array to keep track of +ve scores
+		GoodAnswerScores = append(GoodAnswerScores, goodAnswersCount)
+		//fmt.Println("GoodAnswerScores:", GoodAnswerScores)
+		//fmt.Println("Length:", len(GoodAnswerScores))
 		// submit score to global variable
 
-		// issue percentage
-		// You scored higher than 60% of all quizzers;
+		// calculate +ve percentage
+		var count int = 0
+		for i := 0; i < len(GoodAnswerScores); i++ {
+			if GoodAnswerScores[i] < goodAnswersCount {
+				count += 1
+			}
+		}
+		var stat int = (count * 100) / len(GoodAnswerScores)
+		fmt.Printf("You scored higher than %v of all quizzers", stat)
+		fmt.Println()
 	}
 }
 
