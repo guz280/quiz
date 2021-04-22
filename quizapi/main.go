@@ -64,10 +64,10 @@ type QandAs struct {
 	QandAs []QandA `json:"QandA"`
 }
 type QandA struct {
-	id       int          `json:"id"`
-	question string       `json:"question"`
-	answers  []AllAnswers `json:"answers"`
-	answerid int          `json:"answer"`
+	Id       int          `json:"id"`
+	Question string       `json:"question"`
+	Answers  []AllAnswers `json:"answers"`
+	Answerid int          `json:"answerid"`
 }
 
 type AllAnswers struct {
@@ -78,13 +78,13 @@ type AllAnswers struct {
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 
 	var id = r.URL.Query().Get("id")
-	questionId, err := strconv.Atoi(id)
+	questionPassedId, err := strconv.Atoi(id)
 	// handle error
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	if (questionId > 7) || (questionId < 1) {
+	if (questionPassedId > 7) || (questionPassedId < 1) {
 		fmt.Println("Please select an existing question id from 1 to 7")
 	} else {
 		// Open our jsonFile
@@ -100,9 +100,9 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		// initialise QandA array
 		var qandas QandAs
 		json.Unmarshal(byteValue, &qandas)
-		fmt.Println("Question: ", qandas.QandAs[questionId-1].question)
-		fmt.Println("Answers:", qandas.QandAs[questionId-1].answers)
-		json.NewEncoder(w).Encode(qandas.QandAs[questionId-1])
+		fmt.Println("Question: ", qandas.QandAs[questionPassedId-1].Question)
+		fmt.Println("Answers:", qandas.QandAs[questionPassedId-1].Answers)
+		json.NewEncoder(w).Encode(qandas.QandAs[questionPassedId-1])
 	}
 }
 
@@ -119,8 +119,14 @@ type Answers struct {
 	Answers []Answer `json:"answers"`
 }
 type Answer struct {
-	questionId int `json:"questionId"`
-	answerId   int `json:"answerId"`
+	Questionid int `json:"questionid"`
+	Answerid   int `json:"answerid"`
+}
+
+type Message struct {
+	GoodAnswers int
+	BadAnswers  int
+	Compared    string
 }
 
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
@@ -156,7 +162,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 
 		for index, answer := range []Answer(userAnswers.Answers) {
 			// check if answer is good or not, increment count accordingly
-			if answers.QandAs[index].answerid == answer.answerId {
+			if answers.QandAs[index].Answerid == answer.Answerid {
 				goodAnswersCount += 1
 			} else {
 				badAnswersCount += 1
@@ -176,10 +182,18 @@ func results(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		var stat int = (count * 100) / len(GoodAnswerScores)
-		fmt.Printf("You scored higher than %v%% of all quizzers", stat)
+		var comparedMsg string
+		comparedMsg = "You scored higher than " + strconv.Itoa(stat) + "% of all quizzers"
+		fmt.Printf(comparedMsg)
 		fmt.Println()
 
-		//json.NewEncoder(w).Encode("Questions: " + qandas.QandAs[questionId-1].Question + " Answers: " + qandas.QandAs[questionId-1].Answers)
+		var m Message
+		m = Message{
+			GoodAnswers: goodAnswersCount,
+			BadAnswers:  badAnswersCount,
+			Compared:    comparedMsg,
+		}
+		json.NewEncoder(w).Encode(m)
 	}
 }
 
