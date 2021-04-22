@@ -1,46 +1,165 @@
 {
-    "QandA":[
-       {
-          "Id":1,
-          "Question":"What's the biggest animal in the world?",
-          "Answers":"1.(The blue whale) 2.(Elephant) 3.(Rhino) 4.(Gorilla)",
-          "Answer": 1
-       },
-       {
-          "Id":2,
-          "Question":"Who painted the Mona Lisa?",
-          "Answers":"1.(Leonardo da Vinci) 2.(Vincent van Gogh) 3.(Pablo Picasso) 4.(Rambrandt)",
-          "Answer": 1
-       },
-       {
-          "Id":3,
-          "Question":"What is the largest country in the world?",
-          "Answers":"1.(Russia) 2.(United Sates) 3.(Malta) 4.(Brazil)",
-          "Answer": 1
-       },
-       {
-          "Id":4,
-          "Question":"Who is the highest spiritual leader of Tibet?",
-          "Answers":"1.(The Dalai Lama) 2.(Pope Francis) 3.(Boris Johnson) 4.(Elon Musk)",
-          "Answer": 1
-       },
-       {
-          "Id":5,
-          "Question":"How many elements are there in the periodic table?",
-          "Answers":"1.(118) 2.(7) 3.(100) 4.(2000)",
-          "Answer": 1
-       },
-       {
-          "Id":6,
-          "Question":"Which is the largest rain forest in the world?",
-          "Answers":"1.(Amazon) 2.(Ebay) 3.(Buskett) 4.(Monteverde Cloud Forest)",
-          "Answer": 1
-       },
-       {
-          "Id":7,
-          "Question":"How old is Pope Francis?",
-          "Answers":"1.(84) 2.(22) 3.(40) 4.(99)",
-          "Answer": 1
-       }
-    ]
- }
+   "QandA":[
+      {
+         "id":1,
+         "question":"What's the biggest animal in the world?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"The blue whale"
+            },
+            {
+               "id":2,
+               "answer":"Elephant"
+            },
+            {
+               "id":3,
+               "answer":"Rhino"
+            },
+            {
+               "id":4,
+               "answer":"Gorilla"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":2,
+         "question":"Who painted the Mona Lisa?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"Leonardo da Vinci"
+            },
+            {
+               "id":2,
+               "answer":"Vincent van Gogh"
+            },
+            {
+               "id":3,
+               "answer":"Pablo Picasso"
+            },
+            {
+               "id":4,
+               "answer":"Rambrandt"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":3,
+         "question":"What is the largest country in the world?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"Russia"
+            },
+            {
+               "id":2,
+               "answer":"United Sates"
+            },
+            {
+               "id":3,
+               "answer":"Malta"
+            },
+            {
+               "id":4,
+               "answer":"Brazil"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":4,
+         "question":"Who is the highest spiritual leader of Tibet?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"The Dalai Lama"
+            },
+            {
+               "id":2,
+               "answer":"Pope Francis"
+            },
+            {
+               "id":3,
+               "answer":"Boris Johnson"
+            },
+            {
+               "id":4,
+               "answer":"Elon Musk"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":5,
+         "question":"How many elements are there in the periodic table?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"118"
+            },
+            {
+               "id":2,
+               "answer":"7"
+            },
+            {
+               "id":3,
+               "answer":"100"
+            },
+            {
+               "id":4,
+               "answer":"2000"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":6,
+         "question":"Which is the largest rain forest in the world?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"Amazon"
+            },
+            {
+               "id":2,
+               "answer":"Ebay"
+            },
+            {
+               "id":3,
+               "answer":"Buskett"
+            },
+            {
+               "id":4,
+               "answer":"Monteverde Cloud Forest"
+            }
+         ],
+         "answerid":1
+      },
+      {
+         "id":7,
+         "question":"How old is Pope Francis?",
+         "answers":[
+            {
+               "id":1,
+               "answer":"84"
+            },
+            {
+               "id":2,
+               "answer":"22"
+            },
+            {
+               "id":3,
+               "answer":"40"
+            },
+            {
+               "id":4,
+               "answer":"99"
+            }
+         ],
+         "answerid":1
+      }
+   ]
+}

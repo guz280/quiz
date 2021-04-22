@@ -41,7 +41,6 @@ var QuestionIds []QuestionId
 
 // questions ids
 func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ENDpoint Hit: returnQuestionIds")
 	QuestionIds = []QuestionId{
 		QuestionId{Id: 1},
 		QuestionId{Id: 2},
@@ -52,6 +51,7 @@ func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
 		QuestionId{Id: 7},
 	}
 	json.NewEncoder(w).Encode(QuestionIds)
+	fmt.Println(QuestionIds)
 }
 
 // END - GET Question Ids
@@ -64,10 +64,15 @@ type QandAs struct {
 	QandAs []QandA `json:"QandA"`
 }
 type QandA struct {
-	Id       int    `json:"id"`
-	Question string `json:"question"`
-	Answers  string `json:"answers"`
-	Answer   int    `json:"answer"`
+	id       int          `json:"id"`
+	question string       `json:"question"`
+	answers  []AllAnswers `json:"answers"`
+	answerid int          `json:"answer"`
+}
+
+type AllAnswers struct {
+	Id      int    `json:"id"`
+	Answers string `json:"answer"`
 }
 
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
@@ -95,9 +100,9 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		// initialise QandA array
 		var qandas QandAs
 		json.Unmarshal(byteValue, &qandas)
-		fmt.Println("Question: ", qandas.QandAs[questionId-1].Question)
-		fmt.Println("Answers:", qandas.QandAs[questionId-1].Answers)
-		json.NewEncoder(w).Encode("Questions: " + qandas.QandAs[questionId-1].Question + " Answers: " + qandas.QandAs[questionId-1].Answers)
+		fmt.Println("Question: ", qandas.QandAs[questionId-1].question)
+		fmt.Println("Answers:", qandas.QandAs[questionId-1].answers)
+		json.NewEncoder(w).Encode(qandas.QandAs[questionId-1])
 	}
 }
 
@@ -114,8 +119,8 @@ type Answers struct {
 	Answers []Answer `json:"answers"`
 }
 type Answer struct {
-	QuestionId int `json:"questionId"`
-	AnswerId   int `json:"answerId"`
+	questionId int `json:"questionId"`
+	answerId   int `json:"answerId"`
 }
 
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
@@ -151,7 +156,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 
 		for index, answer := range []Answer(userAnswers.Answers) {
 			// check if answer is good or not, increment count accordingly
-			if answers.QandAs[index].Answer == answer.AnswerId {
+			if answers.QandAs[index].answerid == answer.answerId {
 				goodAnswersCount += 1
 			} else {
 				badAnswersCount += 1
@@ -173,6 +178,8 @@ func results(w http.ResponseWriter, r *http.Request) {
 		var stat int = (count * 100) / len(GoodAnswerScores)
 		fmt.Printf("You scored higher than %v%% of all quizzers", stat)
 		fmt.Println()
+
+		//json.NewEncoder(w).Encode("Questions: " + qandas.QandAs[questionId-1].Question + " Answers: " + qandas.QandAs[questionId-1].Answers)
 	}
 }
 
