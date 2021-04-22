@@ -11,10 +11,6 @@ import (
 	// "github.com/gorilla/mux"
 )
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome")
-}
-
 func handleRequests() {
 	// using "github.com/gorilla/mux" -> but had issues with this library
 	// // myRouter := mux.NewRouter().StrictSlash(true)
@@ -25,8 +21,6 @@ func handleRequests() {
 	// // log.Fatal(http.ListenAndServe(":1000", myRouter))
 
 	// using "net/http"
-	http.HandleFunc("/", homePage)
-	// return list of question ids
 	http.HandleFunc("/questions", returnQuestionIds)
 	http.HandleFunc("/question", returnQuestionAndAnswers)
 	http.HandleFunc("/results", results)
@@ -116,6 +110,14 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 
 var GoodAnswerScores []int
 
+type Answers struct {
+	Answers []Answer `json:"answers"`
+}
+type Answer struct {
+	QuestionId int `json:"questionId"`
+	AnswerId   int `json:"answerId"`
+}
+
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
 func results(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -126,12 +128,13 @@ func results(w http.ResponseWriter, r *http.Request) {
 		reqBody, _ := ioutil.ReadAll(r.Body)
 		//fmt.Println(string(reqBody))
 
-		var ints []int
-		err := json.Unmarshal([]byte(reqBody), &ints)
-		if err != nil {
-			log.Fatal(err)
-		}
-
+		// read json file sent by user
+		// initialise answers array
+		var userAnswers Answers
+		json.Unmarshal(reqBody, &userAnswers)
+		//fmt.Println(userAnswers.Answers[0].AnswerId)
+		//fmt.Println(userAnswers.Answers[0].QuestionId)
+		//fmt.Println(len([]Answer(userAnswers.Answers)))
 		var goodAnswersCount, badAnswersCount int = 0, 0
 		// loop through array to submit good/bad answers
 
@@ -149,11 +152,10 @@ func results(w http.ResponseWriter, r *http.Request) {
 		// initialise QandA array
 		var answers QandAs
 		json.Unmarshal(byteValue, &answers)
-		//fmt.Println("guz:", answers)
 
-		for index, answer := range ints {
+		for index, answer := range []Answer(userAnswers.Answers) {
 			// check if answer is good or not, increment count accordingly
-			if answers.QandAs[index].Answer == answer {
+			if answers.QandAs[index].Answer == answer.AnswerId {
 				goodAnswersCount += 1
 			} else {
 				badAnswersCount += 1
