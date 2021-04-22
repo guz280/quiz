@@ -1,6 +1,6 @@
 package main
 
-import "quizcmd/cmd"
+import "quizcli/cmd"
 
 func main() {
 	cmd.Execute()
