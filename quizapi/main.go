@@ -71,8 +71,8 @@ type QandA struct {
 	Answerid int          `json:"answerid"`
 }
 type AllAnswers struct {
-	Id      int    `json:"id"`
-	Answers string `json:"answer"`
+	Id     int    `json:"id"`
+	Answer string `json:"answer"`
 }
 
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {

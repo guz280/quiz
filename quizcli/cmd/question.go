@@ -40,9 +40,6 @@ func init() {
 	rootCmd.AddCommand(questionCmd)
 }
 
-// type QandAs struct {
-// 	QandAs []QandA `json:"QandA"`
-// }
 type QandA struct {
 	Id       int
 	Question string
