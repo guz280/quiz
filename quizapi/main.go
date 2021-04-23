@@ -70,7 +70,6 @@ type QandA struct {
 	Answers  []AllAnswers `json:"answers"`
 	Answerid int          `json:"answerid"`
 }
-
 type AllAnswers struct {
 	Id      int    `json:"id"`
 	Answers string `json:"answer"`
@@ -100,7 +99,9 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		byteValue, _ := ioutil.ReadAll(jsonFile)
 		// initialise QandA array
 		var qandas QandAs
-		json.Unmarshal(byteValue, &qandas)
+		if err := json.Unmarshal(byteValue, &qandas); err != nil {
+			fmt.Printf("Could not unmarshal byteValue. %v", err)
+		}
 		fmt.Println("Question: ", qandas.QandAs[questionPassedId-1].Question)
 		fmt.Println("Answers:", qandas.QandAs[questionPassedId-1].Answers)
 		json.NewEncoder(w).Encode(qandas.QandAs[questionPassedId-1])
@@ -142,7 +143,10 @@ func results(w http.ResponseWriter, r *http.Request) {
 		// read json file sent by user
 		// initialise answers array
 		var userAnswers Answers
-		json.Unmarshal(reqBody, &userAnswers)
+		if err := json.Unmarshal(reqBody, &userAnswers); err != nil {
+			fmt.Printf("Could not unmarshal reqBody. %v", err)
+		}
+
 		var goodAnswersCount, badAnswersCount int = 0, 0
 		// loop through array to submit good/bad answers
 
@@ -159,7 +163,9 @@ func results(w http.ResponseWriter, r *http.Request) {
 		byteValue, _ := ioutil.ReadAll(jsonFile)
 		// initialise QandA array
 		var answers QandAs
-		json.Unmarshal(byteValue, &answers)
+		if err := json.Unmarshal(byteValue, &answers); err != nil {
+			fmt.Printf("Could not unmarshal byteValue. %v", err)
+		}
 
 		for index, answer := range []Answer(userAnswers.Answers) {
 			// check if answer is good or not, increment count accordingly
