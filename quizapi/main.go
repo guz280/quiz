@@ -40,6 +40,7 @@ type QuestionId struct {
 var QuestionIds []QuestionId
 
 // questions ids
+// modify to take the ids from the json file not hard coded
 func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
 	QuestionIds = []QuestionId{
 		QuestionId{Id: 1},

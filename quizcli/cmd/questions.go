@@ -16,7 +16,11 @@ limitations under the License.
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
@@ -28,19 +32,54 @@ var questionsCmd = &cobra.Command{
 	Long:  `Get all question Ids`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("questions called")
+		getQuestionIds()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(questionsCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+type QuestionId struct {
+	Id int
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// questionsCmd.PersistentFlags().String("foo", "", "A help for foo")
+// initialise
+var QuestionIds []QuestionId
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// questionsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func getQuestionIds() {
+	url := "http://localhost:1000/questions"
+	responseBytes := getQuestionsIdData(url)
+	questionids := QuestionIds
+
+	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+	}
+	for index := range questionids {
+		fmt.Println("Question Id: ", questionids[index].Id)
+	}
+}
+
+func getQuestionsIdData(baseAPI string) []byte {
+	request, err := http.NewRequest(
+		http.MethodGet, //method
+		baseAPI,        //url
+		nil,            //body
+	)
+
+	if err != nil {
+		log.Printf("Could not request to get question ids. %v", err)
+	}
+
+	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		log.Printf("Could not make a request. %v", err)
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response body. %v", err)
+	}
+	fmt.Println(string(responseBytes))
+	return responseBytes
 }
