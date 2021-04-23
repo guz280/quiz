@@ -31,7 +31,7 @@ var questionsCmd = &cobra.Command{
 	Short: "Get all questions ids",
 	Long:  `Get all question Ids`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("questions called")
+		//fmt.Println("questions called")
 		getQuestionIds()
 	},
 }
@@ -55,6 +55,8 @@ func getQuestionIds() {
 	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
 		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
 	}
+
+	fmt.Println("Choose question id from the below")
 	for index := range questionids {
 		fmt.Println("Question Id: ", questionids[index].Id)
 	}
@@ -80,6 +82,5 @@ func getQuestionsIdData(baseAPI string) []byte {
 	if err != nil {
 		log.Printf("Could not read response body. %v", err)
 	}
-	fmt.Println(string(responseBytes))
 	return responseBytes
 }
