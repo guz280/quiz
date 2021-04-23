@@ -29,7 +29,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "questions", //"dadjoke",
+	Use:   "quiz", //"dadjoke",
 	Short: "Get all question Ids",
 	Long:  `Get all question Ids available for user to answer`,
 }
