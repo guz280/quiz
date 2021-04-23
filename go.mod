@@ -1,4 +1,4 @@
-module quizcli
+module quiz.com/quizcli
 
 go 1.16
 
