@@ -25,44 +25,55 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// questionsCmd represents the questions command
-var questionsCmd = &cobra.Command{
-	Use:   "questions",
-	Short: "Get all questions ids",
-	Long:  `Get all question Ids`,
+// questionCmd represents the question command
+var questionCmd = &cobra.Command{
+	Use:   "question",
+	Short: "Get your question & answrers",
+	Long:  `Get your question & answers by entering id`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//fmt.Println("questions called")
-		getQuestionIds()
+		//fmt.Println("question called")
+		getQuestionAndAnswerById(args)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(questionsCmd)
+	rootCmd.AddCommand(questionCmd)
 }
 
-type QuestionId struct {
-	Id int
+// type QandAs struct {
+// 	QandAs []QandA `json:"QandA"`
+// }
+type QandA struct {
+	Id       int
+	Question string
+	Answers  []AllAnswers
+	Answerid int
+}
+type AllAnswers struct {
+	Id     int
+	Answer string
 }
 
 // initialise
-var QuestionIds []QuestionId
+var QuestionAndAnswers QandA
 
-func getQuestionIds() {
-	url := "http://localhost:1000/questions"
-	responseBytes := getQuestionsIdData(url)
-	questionids := QuestionIds
-
-	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
+func getQuestionAndAnswerById(args []string) {
+	url := "http://localhost:1000/question?id=" + args[0]
+	responseBytes := getQuestionsAndAsnwersData(url)
+	fmt.Println(string(responseBytes))
+	qandas := QuestionAndAnswers
+	if err := json.Unmarshal(responseBytes, &qandas); err != nil {
 		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
 	}
 
-	fmt.Println("Choose question id.")
-	for index := range questionids {
-		fmt.Println("Question Id: ", questionids[index].Id)
+	fmt.Println("Q:", qandas.Question)
+	for index := range qandas.Answers {
+		fmt.Println("A:", qandas.Answers[index].Id, "-", qandas.Answers[index].Answer)
 	}
 }
 
-func getQuestionsIdData(baseAPI string) []byte {
+func getQuestionsAndAsnwersData(baseAPI string) []byte {
+
 	request, err := http.NewRequest(
 		http.MethodGet, //method
 		baseAPI,        //url
