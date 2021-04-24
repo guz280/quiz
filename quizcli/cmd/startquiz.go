@@ -11,8 +11,8 @@ import (
 // startquizCmd represents the startquiz command
 var startquizCmd = &cobra.Command{
 	Use:   "startquiz",
-	Short: "Start the whole quiz",
-	Long:  `Start the whole quiz. Will guide you through all the steps`,
+	Short: "Starts the whole quiz. Will guide you through all the steps",
+	Long:  `Starts the whole quiz. Will guide you through all the steps`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 
