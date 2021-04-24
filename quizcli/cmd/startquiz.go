@@ -20,7 +20,7 @@ var startquizCmd = &cobra.Command{
 		responseBytes := getQuestionIds()
 		questionids := QuestionIds
 		if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
-			fmt.Printf("ssssCould not unmarshal reponseBytes. %v", err)
+			fmt.Printf("Could not unmarshal reponseBytes. %v", err)
 		}
 
 		// declare answer array & get questions one by one waiting for response from user
