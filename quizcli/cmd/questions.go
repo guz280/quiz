@@ -52,8 +52,8 @@ func getQuestionIds() {
 	questionids := QuestionIds
 
 	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
-		fmt.Println("Could not unmarshal reponseBytes.")
-		// fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return
 	}
 
 	fmt.Println("Choose question id.")
@@ -63,6 +63,8 @@ func getQuestionIds() {
 }
 
 func getQuestionsIdData(baseAPI string) []byte {
+	retError := make([]byte, 0)
+
 	request, err := http.NewRequest(
 		http.MethodGet, //method
 		baseAPI,        //url
@@ -70,20 +72,20 @@ func getQuestionsIdData(baseAPI string) []byte {
 	)
 
 	if err != nil {
-		fmt.Println("Could not request to get question ids.")
-		// log.Printf("Could not request to get question ids. %v", err)
+		fmt.Printf("Could not request to get question ids. %v", err)
+		return retError
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("Could not make a request.")
-		// log.Printf("Could not make a request. %v", err)
+		fmt.Printf("Could not make a request. %v", err)
+		return retError
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Could not read response body.")
-		// log.Printf("Could not read response body. %v", err)
+		fmt.Printf("Could not read response body. %v", err)
+		return retError
 	}
 	return responseBytes
 }

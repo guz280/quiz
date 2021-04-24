@@ -38,14 +38,15 @@ var MessageReceived Message
 func postResults(args []string) {
 	if len(args) != 7 {
 		fmt.Println("Please enter 7 answers only")
+		return
 	} else {
 		url := "http://localhost:1000/results"
 		responseBytes := postResultsGetStatistics(url, args)
-		fmt.Println(string(responseBytes))
 
 		msg := MessageReceived
 		if err := json.Unmarshal(responseBytes, &msg); err != nil {
 			fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+			return
 		}
 
 		fmt.Println("Good Answers:", msg.GoodAnswers)
@@ -67,20 +68,20 @@ var Results Answers
 
 func postResultsGetStatistics(baseAPI string, args []string) []byte {
 
-	//{"answers":[{"questionId":1,"answerId":3},{"questionId":2,"answerId":3},{"questionId":3,"answerId":1},{"questionId":4,"answerId":1},{"questionId":5,"answerId":1},{"questionId":6,"answerId":1},{"questionId":7,"answerId":3}]}
+	retError := make([]byte, 0)
+
 	for i := 0; i < len(args); i++ {
 		var answer Answer
 		id, err := strconv.Atoi(args[i])
 		if err != nil {
-			fmt.Println("error convert to int")
-			// fmt.Println("error convert to int", err)
+			fmt.Println("error convert to int", err)
+			return retError
 		}
 		answer.Answerid = id
 		answer.Questionid = i + 1
 
 		Results.Answers = append(Results.Answers, answer)
 	}
-	fmt.Println(Results)
 	output, err := json.Marshal(Results)
 	r := strings.NewReader(string(output))
 
@@ -91,20 +92,20 @@ func postResultsGetStatistics(baseAPI string, args []string) []byte {
 	)
 
 	if err != nil {
-		fmt.Println("Could not request to get question ids.")
-		// log.Printf("Could not request to get question ids. %v", err)
+		fmt.Printf("Could not request to get question ids. %v", err)
+		return retError
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("Could not make a request.")
-		// log.Printf("Could not make a request. %v", err)
+		fmt.Printf("Could not make a request. %v", err)
+		return retError
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Could not read response body.")
-		// log.Printf("Could not read response body. %v", err)
+		fmt.Printf("Could not read response body. %v", err)
+		return retError
 	}
 	return responseBytes
 }
