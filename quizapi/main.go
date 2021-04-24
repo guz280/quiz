@@ -42,6 +42,7 @@ var QuestionIds []QuestionId
 // questions ids
 // modify to take the ids from the json file not hard coded
 func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("return question ids called")
 	QuestionIds = []QuestionId{
 		QuestionId{Id: 1},
 		QuestionId{Id: 2},
@@ -52,7 +53,6 @@ func returnQuestionIds(w http.ResponseWriter, r *http.Request) {
 		QuestionId{Id: 7},
 	}
 	json.NewEncoder(w).Encode(QuestionIds)
-	fmt.Println(QuestionIds)
 }
 
 // END - GET Question Ids
@@ -76,6 +76,8 @@ type AllAnswers struct {
 }
 
 func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("return question and answers called")
 
 	var id = r.URL.Query().Get("id")
 	questionPassedId, err := strconv.Atoi(id)
@@ -102,8 +104,6 @@ func returnQuestionAndAnswers(w http.ResponseWriter, r *http.Request) {
 		if err := json.Unmarshal(byteValue, &qandas); err != nil {
 			fmt.Printf("Could not unmarshal byteValue. %v", err)
 		}
-		fmt.Println("Question: ", qandas.QandAs[questionPassedId-1].Question)
-		fmt.Println("Answers:", qandas.QandAs[questionPassedId-1].Answers)
 		json.NewEncoder(w).Encode(qandas.QandAs[questionPassedId-1])
 	}
 }
@@ -133,8 +133,9 @@ type Message struct {
 
 // I know that this needs to be done a proper POST, but had issues with library "github.com/gorilla/mux"
 func results(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("post results called")
 	if r.Method != "POST" {
-		fmt.Println("Has to be a POST Method")
+		fmt.Println("Call has to be a POST Method")
 	} else {
 		//fmt.Println(r.Method)
 		// get the body of our POST request
@@ -175,8 +176,6 @@ func results(w http.ResponseWriter, r *http.Request) {
 				badAnswersCount += 1
 			}
 		}
-		fmt.Println("goodAnswers:", goodAnswersCount)
-		fmt.Println("badAnswers:", badAnswersCount)
 
 		// append to array to keep track of +ve scores
 		GoodAnswerScores = append(GoodAnswerScores, goodAnswersCount)
@@ -191,8 +190,6 @@ func results(w http.ResponseWriter, r *http.Request) {
 		var stat int = (count * 100) / len(GoodAnswerScores)
 		var comparedMsg string
 		comparedMsg = "You scored higher than " + strconv.Itoa(stat) + "% of all quizzers"
-		fmt.Printf(comparedMsg)
-		fmt.Println()
 
 		var m Message
 		m = Message{
