@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/spf13/cobra"
@@ -56,11 +55,11 @@ var QuestionAndAnswers QandA
 
 func getQuestionAndAnswerById(args []string) {
 	url := "http://localhost:1000/question?id=" + args[0]
-	responseBytes := getQuestionsAndAsnwersData(url)
-	fmt.Println(string(responseBytes))
+	responseBytes := getQuestionsAndAnswersData(url)
 	qandas := QuestionAndAnswers
 	if err := json.Unmarshal(responseBytes, &qandas); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		fmt.Println("Could not unmarshal reponseBytes.")
+		// fmt.Printf("Could not unmarshal reponseBytes. %v", err)
 	}
 
 	fmt.Println("Q:", qandas.Question)
@@ -69,7 +68,7 @@ func getQuestionAndAnswerById(args []string) {
 	}
 }
 
-func getQuestionsAndAsnwersData(baseAPI string) []byte {
+func getQuestionsAndAnswersData(baseAPI string) []byte {
 
 	request, err := http.NewRequest(
 		http.MethodGet, //method
@@ -78,17 +77,19 @@ func getQuestionsAndAsnwersData(baseAPI string) []byte {
 	)
 
 	if err != nil {
-		log.Printf("Could not request to get question ids. %v", err)
+		fmt.Println("Could not request to get question ids.")
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		log.Printf("Could not make a request. %v", err)
+		fmt.Println("Could not make a request.")
+		// log.Printf("Could not make a request. %v", err)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.Printf("Could not read response body. %v", err)
+		fmt.Println("Could not read response body.")
+		// log.Printf("Could not read response body. %v", err)
 	}
 	return responseBytes
 }

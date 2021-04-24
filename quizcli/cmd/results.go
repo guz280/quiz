@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -73,7 +72,8 @@ func postResultsGetStatistics(baseAPI string, args []string) []byte {
 		var answer Answer
 		id, err := strconv.Atoi(args[i])
 		if err != nil {
-			fmt.Println("error convert to int", err)
+			fmt.Println("error convert to int")
+			// fmt.Println("error convert to int", err)
 		}
 		answer.Answerid = id
 		answer.Questionid = i + 1
@@ -91,17 +91,20 @@ func postResultsGetStatistics(baseAPI string, args []string) []byte {
 	)
 
 	if err != nil {
-		log.Printf("Could not request to get question ids. %v", err)
+		fmt.Println("Could not request to get question ids.")
+		// log.Printf("Could not request to get question ids. %v", err)
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		log.Printf("Could not make a request. %v", err)
+		fmt.Println("Could not make a request.")
+		// log.Printf("Could not make a request. %v", err)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.Printf("Could not read response body. %v", err)
+		fmt.Println("Could not read response body.")
+		// log.Printf("Could not read response body. %v", err)
 	}
 	return responseBytes
 }

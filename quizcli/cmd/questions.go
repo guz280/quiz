@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/spf13/cobra"
@@ -53,7 +52,8 @@ func getQuestionIds() {
 	questionids := QuestionIds
 
 	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		fmt.Println("Could not unmarshal reponseBytes.")
+		// fmt.Printf("Could not unmarshal reponseBytes. %v", err)
 	}
 
 	fmt.Println("Choose question id.")
@@ -70,17 +70,20 @@ func getQuestionsIdData(baseAPI string) []byte {
 	)
 
 	if err != nil {
-		log.Printf("Could not request to get question ids. %v", err)
+		fmt.Println("Could not request to get question ids.")
+		// log.Printf("Could not request to get question ids. %v", err)
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		log.Printf("Could not make a request. %v", err)
+		fmt.Println("Could not make a request.")
+		// log.Printf("Could not make a request. %v", err)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.Printf("Could not read response body. %v", err)
+		fmt.Println("Could not read response body.")
+		// log.Printf("Could not read response body. %v", err)
 	}
 	return responseBytes
 }
