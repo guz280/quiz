@@ -15,7 +15,7 @@ var startquizCmd = &cobra.Command{
 	Long:  `Start the whole quiz. Will guide you through all the steps`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("startquiz called")
+
 		// get all questionIds
 		responseBytes := getQuestionIds()
 		questionids := QuestionIds
@@ -23,13 +23,16 @@ var startquizCmd = &cobra.Command{
 			fmt.Printf("ssssCould not unmarshal reponseBytes. %v", err)
 		}
 
-		// declare answer array & get questions one by one
+		// declare answer array & get questions one by one waiting for response from user
 		answers := []string{}
 		for i := 0; i < len(questionids); i++ {
 			var args []string
 			idString := strconv.Itoa(questionids[i].Id)
 			args = append(args, idString)
+			// get question and answers
 			getQuestionAndAnswerById(args)
+
+			// wait for answer from user
 			answer := ""
 			fmt.Printf("Enter answer for question %v: ", questionids[i].Id)
 			fmt.Println()
@@ -37,20 +40,11 @@ var startquizCmd = &cobra.Command{
 
 			answers = append(answers, answer)
 		}
+		// send results
 		postResults(answers)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(startquizCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// startquizCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// startquizCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
