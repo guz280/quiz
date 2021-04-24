@@ -46,20 +46,23 @@ type QuestionId struct {
 // initialise
 var QuestionIds []QuestionId
 
-func getQuestionIds() {
+func getQuestionIds() []byte {
+	retError := make([]byte, 0)
+
 	url := "http://localhost:1000/questions"
 	responseBytes := getQuestionsIdData(url)
 	questionids := QuestionIds
 
 	if err := json.Unmarshal([]byte(responseBytes), &questionids); err != nil {
 		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
-		return
+		return retError
 	}
 
 	fmt.Println("Choose question id.")
 	for index := range questionids {
 		fmt.Println("Question Id: ", questionids[index].Id)
 	}
+	return responseBytes
 }
 
 func getQuestionsIdData(baseAPI string) []byte {
