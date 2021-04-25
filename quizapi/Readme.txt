@@ -5,6 +5,7 @@ In order to enable the program to be more user friendly the program could be dev
                 from a command line parameter.
         - The cobra commands, question questions and result are left there as a testing tool. 
                 They would be removed in reality.
+        - The statistics algorithm accuracy could be sharpened
 
 
 To run quizapi rn as follows:
